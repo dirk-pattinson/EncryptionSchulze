@@ -708,7 +708,9 @@ Section Encryption.
     Definition eballot := cand -> cand -> Z. (* Here Ciphertext is encrypted natural *)
     (* assume for the moment that Ciphertext is Z *)
 
-    Hypothesis ballot_zero_one : forall (b : ballot), {forall c d, b c d = 0%nat} + {forall c d, b c d = 1%nat}.
+    Hypothesis ballot_zero_one :
+      forall (b : ballot), {forall c d, b c d = 0%nat /\ b d c = 1%nat} +
+                      {forall c d, b c d = 1%nat /\ b d c = 0%nat}.
     
     Inductive HState: Type :=
     | hpartial: (list eballot * list eballot)  -> (cand -> cand -> Z) -> HState 
@@ -723,25 +725,92 @@ Section Encryption.
         (forall c d, R c d \/ R d c) /\
         (forall c d, b c d = 1%nat <-> R c d /\ ~R d c).
 
-
+    (* 
     Definition eql (c d : cand) (R : cand -> cand -> Prop) :=  R c d /\ R d c.
 
-    Definition best (c : cand) (R : cand -> cand -> Prop) := forall (d : cand),
+    Definition best (c : cand) (R : cand -> cand -> Prop) :=
+      forall (d : cand), 
         ~eql c d R -> R c d.
 
     Definition good_rel (R : cand -> cand -> Prop) (l : list cand) := 
-       exists (c : cand), In c l /\ best c R.
+      exists (c : cand), In c l /\ best c R. *)
 
-    (* 
-Theorem good_rel_lemma :
-forall R l, exists c, In c l /\ best c R -> forall d, eql c d R -> good_rel R (remove dec_cand d l).
-     *)
-    
-    Theorem good_rel_lemma :
-      forall R l c d , In c l -> In d l -> best c R  ->  eql c d R -> good_rel R (remove dec_cand d l).
-    Proof.
-      intros. unfold good_rel.
+    (* Try to find the definition of Rel which follows all the 
+       properties specified in valid ballot. This definition 
+       of Rel working for everything except the last *)
+
+    Definition Rel (c d : cand) (b : ballot) :=
+      (b c d = 1%nat) \/ (b c d = 0%nat /\ b d c = 0%nat).
+
       
+    Lemma rel_refl : forall (b : ballot) (c : cand), Rel c c b.
+    Proof.
+      intros b c. unfold Rel in *.
+      specialize (ballot_zero_one b). destruct ballot_zero_one.
+      specialize (a c c). omega.
+      specialize (a c c). omega.
+    Qed.
+
+    
+    Lemma rel_transitive : forall (b : ballot) (c d e : cand),
+        Rel c d b -> Rel d e b -> Rel c e b.
+    Proof.
+      intros b c d e H1 H2. unfold Rel in *.
+      specialize (ballot_zero_one b). destruct ballot_zero_one.
+      destruct H1 as [H1 | [H3 H4]].
+      destruct H2 as [H2 | [H3 H4]].
+      left. specialize (a e c). destruct a. auto.
+      left. specialize (a e c). destruct a. auto.
+      left. specialize (a e c). destruct a. auto.
+      left. specialize (a c e). destruct a. auto.                                  
+    Qed.
+
+    
+    Lemma rel_or : forall (b : ballot) (c d : cand), Rel c d b \/ Rel d c b. 
+    Proof.
+      intros b c d. unfold Rel in *.
+      specialize (ballot_zero_one b). destruct ballot_zero_one.
+      right. left.
+      specialize (a c d). omega.
+      left. left. specialize (a c d). omega.
+    Qed.
+
+    Lemma rel_last : forall (b : ballot) (c d: cand),  b c d = 1%nat <-> Rel c d b /\ ~Rel d c b.
+    Proof.
+      intros b.
+      specialize (ballot_zero_one b). destruct ballot_zero_one.
+      split; intros.
+      unfold Rel in *.
+      split. auto.
+      unfold not. intros.
+      destruct H0 as [H0 | [H1 H2]].
+      specialize (a c d). omega. omega.
+      unfold Rel in *. destruct H.
+      omega.
+
+      split; intros.
+      unfold Rel in *.
+      split. auto.
+      unfold not. intros.
+      destruct H0 as [H0 | [H1 H2]]. specialize (a c d). omega.
+      omega.
+      unfold Rel in *.
+      omega.
+    Qed.
+    
+      
+    Theorem good_rel_lemma :
+      forall R l c d, In c l -> In d l -> best c R ->
+                 eql c d R -> good_rel R (remove dec_cand d l).
+    Proof.
+      intros. unfold best in *. unfold eql in *.
+      unfold good_rel.
+
+      induction l. admit. 
+      simpl. unfold best.
+      simpl in *. destruct H. destruct H0.
+      rewrite H0. destruct (dec_cand d d).
+      admit. admit.
       
     Theorem ballot_valid_dec : forall b, {valid b} + {~valid b}.
     Proof.
