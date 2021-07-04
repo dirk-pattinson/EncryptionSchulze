@@ -1,0 +1,154 @@
+\begin{thebibliography}{10}
+
+\bibitem{Bayer:2012:EZK}
+Stephanie Bayer and Jens Groth.
+\newblock Efficient zero-knowledge argument for correctness of a shuffle.
+\newblock In David Pointcheval and Thomas Johansson, editors, {\em Proc.
+  {EUROCRYPT} 2012}, volume 7237 of {\em Lecture Notes in Computer Science},
+  pages 263--280. Springer, 2012.
+
+\bibitem{Ben-Or:1988:CRYPTO}
+Michael Ben{-}Or, Oded Goldreich, Shafi Goldwasser, Johan H{\aa}stad, Joe
+  Kilian, Silvio Micali, and Phillip Rogaway.
+\newblock Everything provable is provable in zero-knowledge.
+\newblock In {\em {CRYPTO}}, volume 403 of {\em Lecture Notes in Computer
+  Science}, pages 37--56. Springer, 1988.
+
+\bibitem{Benaloh:2009:SSC}
+Josh Benaloh, Tal Moran, Lee Naish, Kim Ramchen, and Vanessa Teague.
+\newblock Shuffle-sum: coercion-resistant verifiable tallying for {STV} voting.
+\newblock {\em {IEEE} Trans. Information Forensics and Security},
+  4(4):685--698, 2009.
+
+\bibitem{Bernhard:2017:PES}
+Matthew Bernhard, Josh Benaloh, J.~Alex Halderman, Ronald~L. Rivest, Peter
+  Y.~A. Ryan, Philip~B. Stark, Vanessa Teague, Poorvi~L. Vora, and Dan~S.
+  Wallach.
+\newblock Public evidence from secret ballots.
+\newblock In Robert Krimmer, Melanie Volkamer, Nadja~Braun Binder, Norbert
+  Kersting, Olivier Pereira, and Carsten Sch{\"{u}}rmann, editors, {\em Proc.
+  E-Vote-ID 2017}, volume 10615 of {\em Lecture Notes in Computer Science},
+  pages 84--109. Springer, 2017.
+
+\bibitem{Bertot:2004:ITP}
+Yves Bertot, Pierre Cast{\'e}ran, G{\'e}rard Huet, and Christine
+  Paulin-Mohring.
+\newblock {\em Interactive theorem proving and program development : Coq'Art :
+  the calculus of inductive constructions}.
+\newblock Texts in theoretical computer science. Springer, 2004.
+
+\bibitem{DBLP:conf/crypto/ChaumP92}
+David Chaum and Torben~P. Pedersen.
+\newblock Wallet databases with observers.
+\newblock In {\em {CRYPTO}}, volume 740 of {\em Lecture Notes in Computer
+  Science}, pages 89--105. Springer, 1992.
+
+\bibitem{DBLP:conf/crypto/Gamal84}
+Taher~El Gamal.
+\newblock A public key cryptosystem and a signature scheme based on discrete
+  logarithms.
+\newblock In {\em {CRYPTO}}, volume 196 of {\em Lecture Notes in Computer
+  Science}, pages 10--18. Springer, 1984.
+
+\bibitem{Goldreich:1991:ACM}
+Oded Goldreich, Silvio Micali, and Avi Wigderson.
+\newblock Proofs that yield nothing but their validity for all languages in
+  {NP} have zero-knowledge proof systems.
+\newblock {\em J. {ACM}}, 38(3):691--729, 1991.
+
+\bibitem{Goldwasser:1985:STOC}
+Shafi Goldwasser, Silvio Micali, and Charles Rackoff.
+\newblock The knowledge complexity of interactive proof-systems (extended
+  abstract).
+\newblock In {\em {STOC}}, pages 291--304. {ACM}, 1985.
+
+\bibitem{Hirt:2000:ERF}
+Martin Hirt and Kazue Sako.
+\newblock Efficient receipt-free voting based on homomorphic encryption.
+\newblock In Bart Preneel, editor, {\em Proc. {EUROCRYPT} 2000}, volume 1807 of
+  {\em Lecture Notes in Computer Science}, pages 539--556. Springer, 2000.
+
+\bibitem{Kumar:2014:CVI}
+Ramana Kumar, Magnus~O. Myreen, Michael Norrish, and Scott Owens.
+\newblock Cakeml: a verified implementation of {ML}.
+\newblock In Suresh Jagannathan and Peter Sewell, editors, {\em Proc. {POPL}
+  2014}, pages 179--192. {ACM}, 2014.
+
+\bibitem{Kusters:2010:CCS}
+Ralf K{\"{u}}sters, Tomasz Truderung, and Andreas Vogt.
+\newblock Accountability: definition and relationship to verifiability.
+\newblock In {\em {ACM} Conference on Computer and Communications Security},
+  pages 526--535. {ACM}, 2010.
+
+\bibitem{Kusters:2012:SP}
+Ralf K{\"{u}}sters, Tomasz Truderung, and Andreas Vogt.
+\newblock Clash attacks on the verifiability of e-voting systems.
+\newblock In {\em {IEEE} Symposium on Security and Privacy}, pages 395--409.
+  {IEEE} Computer Society, 2012.
+
+\bibitem{Leroy:2013:ORM}
+X.~Leroy, Damien Doligez, Alain Frisch, Jacques Garrigue, Didier R{\`e}my, and
+  J{\'e}r{\^o}me Vouillon.
+\newblock The ocaml reference manual, 2013.
+
+\bibitem{Letouzey:2003:NEC}
+Pierre Letouzey.
+\newblock A new extraction for coq.
+\newblock In Herman Geuvers and Freek Wiedijk, editors, {\em Proc. TYPES 2002},
+  volume 2646 of {\em Lecture Notes in Computer Science}, pages 200--219.
+  Springer, 2003.
+
+\bibitem{Pattinson:2015:VCM}
+Dirk Pattinson and Carsten Sch{\"{u}}rmann.
+\newblock Vote counting as mathematical proof.
+\newblock In Bernhard Pfahringer and Jochen Renz, editors, {\em Proc. {AI}
+  2015}, volume 9457 of {\em Lecture Notes in Computer Science}, pages
+  464--475. Springer, 2015.
+
+\bibitem{Pattinson:2017:SVE}
+Dirk Pattinson and Mukesh Tiwari.
+\newblock Schulze voting as evidence carrying computation.
+\newblock In Mauricio Ayala{-}Rinc{\'{o}}n and C{\'{e}}sar~A. Mu{\~{n}}oz,
+  editors, {\em Proc. {ITP} 2017}, volume 10499 of {\em Lecture Notes in
+  Computer Science}, pages 410--426. Springer, 2017.
+
+\bibitem{Pederson}
+Torben~Pryds Pedersen.
+\newblock Non-interactive and information-theoretic secure verifiable secret
+  sharing.
+\newblock In Joan Feigenbaum, editor, {\em Advances in Cryptology --- CRYPTO
+  '91}, pages 129--140, Berlin, Heidelberg, 1992. Springer Berlin Heidelberg.
+
+\bibitem{Rivest:2008:PTRS}
+Ronald~L Rivest.
+\newblock On the notion of Ôsoftware independenceÕin voting systems.
+\newblock {\em Philosophical Transactions of the Royal Society A: Mathematical,
+  Physical and Engineering Sciences}, 366(1881):3759--3767, 2008.
+
+\bibitem{Rivest:2010:OSW}
+Ronald~L. Rivest and Emily Shen.
+\newblock An optimal single-winner preferential voting system based on game
+  theory.
+\newblock In Vincent Conitzer and Jörg Rothe, editors, {\em Proc. COMSOC
+  2010}. Duesseldorf University Press, 2010.
+
+\bibitem{Schulze:2011:NMC}
+Markus Schulze.
+\newblock A new monotonic, clone-independent, reversal symmetric, and
+  {C}ondorcet-consistent single-winner election method.
+\newblock {\em Social Choice and Welfare}, 36(2):267--303, 2011.
+
+\bibitem{DBLP:conf/africacrypt/TereliusW10}
+Bj{\"{o}}rn Terelius and Douglas Wikstr{\"{o}}m.
+\newblock Proofs of restricted shuffles.
+\newblock In {\em {AFRICACRYPT}}, volume 6055 of {\em Lecture Notes in Computer
+  Science}, pages 100--113. Springer, 2010.
+
+\bibitem{Wikstrom:2009:CPS}
+Douglas Wikstr\"{o}m.
+\newblock A commitment-consistent proof of a shuffle.
+\newblock In {\em Proceedings of the 14th Australasian Conference on
+  Information Security and Privacy}, ACISP '09, pages 407--421, Berlin,
+  Heidelberg, 2009. Springer-Verlag.
+
+\end{thebibliography}

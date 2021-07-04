@@ -10,11 +10,89 @@ Require Import Coq.Logic.ConstructiveEpsilon.
 Require Import Coq.ZArith.ZArith.
 Import ListNotations.
 Open Scope Z.
+Require Import
+        Program Morphisms Relations RelationClasses Permutation.
+
+
 
 Notation "'existsT' x .. y , p" :=
   (sigT (fun x => .. (sigT (fun y => p)) ..))
     (at level 200, x binder, right associativity,
      format "'[' 'existsT' '/ ' x .. y , '/ ' p ']'") : type_scope.
+
+
+
+Fixpoint all_pairs_row_t {A : Type} (l1 : list A) (l2 : list A) : list (A * A) :=
+  match l1 with
+  | [] => []
+  | c :: cs =>
+    map (fun x => (c, x)) l2 ++ all_pairs_row_t cs l2
+  end.
+
+Eval compute in all_pairs_row_t [1;2;3] [4].
+
+Lemma row_t_correctness :
+  forall (A : Type) (a1 a2 : A) (l1 l2 : list A),
+    In a1 l1 -> In a2 l2 -> In (a1, a2) (all_pairs_row_t l1 l2). 
+Proof.
+  intros A a1 a2.
+  induction l1; simpl; intros; try auto.
+  - destruct H; subst.
+    +  apply in_app_iff.  
+       left. apply in_map. auto.
+    +  apply in_app_iff. right. auto.
+Qed.
+
+Definition all_pairs_row {A : Type} (l : list A) : list (A * A) :=
+  all_pairs_row_t l l.
+
+Lemma all_pairs_row_in :
+  forall (A : Type) (a1 a2 : A) (l : list A),
+    In a1 l -> In a2 l -> In (a1, a2) (all_pairs_row l).
+Proof.
+  intros A a1 a2 l H1 H2.
+  unfold all_pairs_row.
+  pose proof (row_t_correctness A a1 a2 l l H1 H2); auto.
+Qed.
+
+
+Fixpoint all_pairs_col_t {A : Type} (l1 : list A) (l2 : list A) : list (A * A) :=
+  match l1 with
+  | [] => []
+  | c :: cs =>
+      map (fun x => (x, c)) l2 ++ all_pairs_col_t cs l2
+  end.
+
+Eval compute in all_pairs_col_t [1;2;3] [4].
+
+
+Lemma col_t_correctness :
+  forall (A : Type) (a1 a2 : A) (l1 l2 : list A),
+    In a1 l1 -> In a2 l2 -> In (a2, a1) (all_pairs_col_t l1 l2). 
+Proof.
+  intros A a1 a2.
+  induction l1; simpl; intros; try auto.
+  - destruct H; subst.
+    +  apply in_app_iff. 
+       left. pose proof (in_map (fun x : A => (x, a1)) l2 a2 H0).
+       simpl in H. auto.
+    +  apply in_app_iff. right. pose proof (IHl1 l2 H H0).
+       auto.
+Qed.
+
+Definition all_pairs_col {A : Type} (l : list A) : list (A * A) :=
+  all_pairs_col_t l l.
+
+Lemma all_pairs_col_in :
+  forall (A : Type) (a1 a2 : A) (l : list A),
+    In a1 l -> In a2 l -> In (a2, a1) (all_pairs_col l).
+Proof.
+  intros A a1 a2 l H1 H2.
+  pose proof (col_t_correctness A a1 a2 l l H1 H2).
+  auto.
+Qed.
+
+
 
 (* all_pairs computes all the pairs of candidates in l *)
 Fixpoint all_pairs {A: Type} (l: list A): list (A * A) :=
@@ -24,6 +102,7 @@ Fixpoint all_pairs {A: Type} (l: list A): list (A * A) :=
                    ++  (map (fun x => (c, x)) cs)
                    ++ (map (fun x => (x, c)) cs)
   end.
+
 
 Lemma all_pairsin: forall {A : Type} (a1 a2 : A) (l : list A),
     In a1 l -> In a2 l -> In (a1, a2) (all_pairs l).
@@ -48,6 +127,59 @@ Proof.
     apply IHl. assumption. assumption.
   }
 Qed.
+  
+Theorem length_all_pairs :
+  forall (A : Type) (l : list A), length (all_pairs l)  = (length l * length l)%nat.
+Proof.
+  intros A l. induction l. simpl. auto.
+  simpl. apply f_equal. repeat (rewrite app_length).
+  repeat (rewrite map_length). rewrite IHl.
+  remember (length l) as n. rewrite Nat.mul_succ_r.
+  omega.
+Qed.
+
+Theorem length_all_pairs_t_row :
+  forall (A : Type) (l1 l2 : list A) ,
+    length (all_pairs_row_t l1 l2) = (length l1 * length l2)%nat.
+Proof.
+  intros A.
+  induction l1; simpl; intros; try auto.
+  rewrite app_length. rewrite map_length.
+  apply f_equal. apply IHl1.
+Qed.
+
+Theorem length_all_pairs_row :
+  forall (A : Type) (l : list A),
+    length (all_pairs_row l) = (length l * length l)%nat.
+Proof.
+  intros A l.
+  pose proof (length_all_pairs_t_row A l l).
+  assumption.
+Qed.
+
+
+
+Theorem length_all_pairs_t_col :
+  forall (A : Type) (l1 l2 : list A) ,
+    length (all_pairs_col_t l1 l2) = (length l1 * length l2)%nat.
+Proof.
+  intros A.
+  induction l1; simpl; intros; try auto.
+  rewrite app_length. rewrite map_length.
+  apply f_equal. apply IHl1.
+Qed.
+
+Theorem length_all_pairs_col :
+  forall (A : Type) (l : list A),
+    length (all_pairs_col l) = (length l * length l)%nat.
+Proof.
+  intros A l.
+  pose proof (length_all_pairs_t_col A l l).
+  assumption.
+Qed.
+
+  
+
 (* maxlist return the maximum number in list l. 0 in case of empty list *)
 Fixpoint maxlist (l : list Z) : Z :=
   match l with
@@ -269,7 +401,7 @@ Proof.
   exists x. intuition.
 Defined.   
    
-
+ 
 
 (* if forallb f l returns false then type level existance of element x in list l
    such that f x = false *)
@@ -291,5 +423,155 @@ Proof.
   simpl in H. rewrite H1 in H. simpl in H. pose proof (F t H) as Ft.
   destruct Ft as [x [Fin Fx]]. exists x. intuition.
 Defined.
+
+Lemma filter_empty : forall (A : Type) (l : list A) (f : A -> bool),
+    filter f l = [] <->
+    (forall x, In x l -> f x = false).
+Proof.
+  intros A. induction l.
+  split; intros. inversion H0. reflexivity.
+  split; intros. destruct H0. simpl in H.
+  destruct (f a) eqn : Ht. inversion H.
+  rewrite <- H0. assumption.
+  simpl in H. destruct (f a). inversion H.
+  pose proof (proj1 (IHl f) H x H0). assumption.
+  simpl. destruct (f a) eqn: Ht.
+  pose proof (H a (in_eq a l)). congruence.
+  pose proof (IHl f). destruct H0.
+  apply H1. intros. firstorder.
+Qed.
+
+Lemma complementary_filter_perm A (p: A -> bool) (l: list A):
+  Permutation l (filter p l ++ filter (compose negb p) l).
+Proof with auto.
+  induction l...
+  simpl.
+  unfold compose.
+  destruct (p a); simpl...
+  apply Permutation_cons_app...
+Qed.
+
+Lemma complementary_filter_In : forall
+    (A : Type) (l : list A) (f : A -> bool) (g : A -> bool)
+    (H : forall x, In x l -> f x = negb (g x)),
+    Permutation l (filter f l ++ filter g l).
+Proof with auto.
+  intros A l f g H.
+  induction l...
+  simpl.
+  destruct (f a) eqn : Ht; simpl...
+  pose proof (H a (in_eq a l)).
+  rewrite Ht in H0.
+  symmetry in H0.
+  apply negb_true_iff in H0.
+  rewrite H0. apply perm_skip. apply IHl.
+  intros. apply H. simpl. right. auto.
+  pose proof (H a (in_eq a l)).
+  rewrite Ht in H0. symmetry in H0. apply negb_false_iff in H0.
+  rewrite H0.
+  apply Permutation_cons_app...
+  apply IHl. intros.
+  apply H. simpl. right. auto.
+Qed.
+
+(*
+Lemma not_equal_elem : forall (A : Type) (a x : A) (l : list A),
+    In a l -> ~ In x l -> x <> a.
+Proof.
+  intros A a x l H1 H2.
+  induction l. inversion H1.
+  specialize (proj1 (not_in_cons x a0 l) H2); intros.
+  simpl in H1. destruct H as [H3 H4]. destruct H1.
+  subst. assumption. apply IHl. assumption. assumption.
+Qed. *)
+
+Theorem transitive_dec_first :
+  forall (A : Type) (Hcd : forall (c d : A), {c = d} + {c <> d})
+         (P : A -> A -> Prop) (Hp : forall (c d : A), {P c d} + {~P c d}) (x y z : A),
+    {P x y -> P y z -> P x z} +
+    {~(P x y -> P y z -> P x z)}. 
+Proof.
+  intros.
+  destruct (Hp x y), (Hp y z), (Hp x z); intuition.
+Qed.
+
+
+
+Theorem transitive_dec_second :
+  forall (A : Type) (Hcd : forall (c d : A), {c = d} + {c <> d})
+         (P : A -> A -> Prop) (Hp : forall (c d : A), {P c d} + {~P c d}) (x y: A) (l : list A),
+    {forall z, In z l -> P x y -> P y z -> P x z} +
+    {~(forall z, In z l -> P x y -> P y z -> P x z)}. 
+Proof.
+  intros.
+  induction l.
+  left; intuition.
+  destruct IHl.
+  pose proof (transitive_dec_first A Hcd P Hp x y a).
+  destruct H.
+  left. intros. destruct H. subst. auto.
+  intuition.
+  right. unfold not. intros. apply n. intros.
+  intuition.
+  pose proof (transitive_dec_first A Hcd P Hp x y a).
+  destruct H.
+  right. unfold not. intros. apply n.
+  intuition.
+  right. intuition.
+Qed.
+  
+Theorem transitive_dec_third :
+  forall (A : Type) (Hcd : forall (c d : A), {c = d} + {c <> d})
+         (P : A -> A -> Prop) (Hp : forall (c d : A), {P c d} + {~P c d}) (x : A) (l1 l2 : list A),
+    {forall y z, In y l1 -> In z l2 -> P x y -> P y z -> P x z} +
+    {~(forall y z, In y l1 -> In z l2 -> P x y -> P y z -> P x z)}.
+Proof.
+  intros.
+  induction l1.
+  left; intuition.
+
+  destruct IHl1.  
+  pose proof (transitive_dec_second A Hcd P Hp x a l2).
+  destruct H.
+  left. intros. destruct H.
+  subst. intuition. apply p with y; intuition.
+  right. unfold not. intros. apply n.  intros.
+  apply H with a; intuition.
+  pose proof (transitive_dec_second A Hcd P Hp x a l2).
+  destruct H.
+  right. unfold not. intros. apply n. intros. apply H with y; intuition.
+  right. unfold not. intros. apply n. intros. apply H with y; intuition.
+Qed.
+
+Theorem transitive_dec_fourth :
+  forall (A : Type) (Hcd : forall (c d : A), {c = d} + {c <> d})
+         (P : A -> A -> Prop) (Hp : forall (c d : A), {P c d} + {~P c d}) (l1 l2 l3 : list A),
+    {forall x y z, In x l1 -> In y l2 -> In z l3 -> P x y -> P y z -> P x z} +
+    {~(forall x y z, In x l1 -> In y l2 -> In z l3 -> P x y -> P y z -> P x z)}.
+Proof.
+  intros.
+  induction l1.
+  left; intuition.
+
+  destruct IHl1.
+  pose proof (transitive_dec_third A Hcd P Hp a l2 l3).
+  destruct H.
+  left. intros. destruct H. subst. apply p0 with y; intuition.
+  apply p with y; intuition.
+  right. unfold not. intros. apply n. intros.
+  apply H with y; intuition.
+  right. unfold not. intros. apply n. intros.
+  apply H with y; intuition.
+Qed.
+
+Theorem transitive_dec:
+  forall (A : Type) (Hcd : forall (c d : A), {c = d} + {c <> d})
+         (P : A -> A -> Prop) (Hp : forall (c d : A), {P c d} + {~P c d}) (l : list A),
+    {forall x y z, In x l -> In y l -> In z l -> P x y -> P y z -> P x z} +
+    {~(forall x y z, In x l -> In y l -> In z l -> P x y -> P y z -> P x z)}.
+Proof.
+  intros. pose proof (transitive_dec_fourth A Hcd P Hp l l l). auto.
+Qed.
+
 (* End of List Lemma file *)
 
